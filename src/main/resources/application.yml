@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: Central de Adoção IF
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/central-adocao-if
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
