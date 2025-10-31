@@ -43,9 +43,9 @@ RF05.2: Visualizar relatórios simples (nº adoções por período, por espécie
 
 Requisitos não-funcionais (RNF)
 
-RNF01: Autenticação para area administrativa (usuário/senha.
+RNF01: Autenticação para area administrativa (usuário/senha).
 
-RNF02: Fotos armazenadas de forma segura (filesystem organizado ou cloud).
+RNF02: Fotos armazenadas de forma segura.
 
 RNF03: Performance: listagem com paginação.
 
