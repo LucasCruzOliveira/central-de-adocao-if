@@ -8,7 +8,7 @@ A plataforma conecta animais disponíveis para adoção a usuários interessados
 
 🛠️ Tecnologias Utilizadas
 
-Java / Spring Boot — Backend
+Java / Spring Boot
 
 Spring Dev tools
 
@@ -18,9 +18,9 @@ Spring Data JPA
 
 PostgreSQL 
 
- React — Interface web
+ React
 
-Spring Security — Autenticação e controle de acesso
+Spring Security
 
 
 
@@ -33,9 +33,9 @@ Promover o bem-estar animal e incentivar a adoção responsável, utilizando a t
 
 ---
 
-📌 Autores
-Lucas cruz Oliveira 
-Rogério pires de Freitas Souza
+📌 Autores:
+Lucas cruz Oliveira, 
+ Rogério pires de Freitas Souza
 
 Projeto desenvolvido por alunos do Instituto Federal da Paraíba (IFPB)
 Curso: Análise e Desenvolvimento de Sistemas (ADS)
