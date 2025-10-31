@@ -1,0 +1,56 @@
+Requisitos funcionais (RF)
+
+1. RF01 — Gestão de animais:
+
+RF01.1: Criar animal com foto.
+
+RF01.2: Editar dados do animal.
+
+RF01.3: Remover animal (soft delete preferível).
+
+RF01.4: Marcar animal como “adotado”.
+
+
+2. RF02 — Gestão de usuários interessados:
+
+RF02.1: Cadastrar usuário (nome, email, telefone, vínculo).
+
+RF02.2: Editar perfil.
+
+RF02.3: Visualizar histórico de adoções do usuário (se houver).
+
+
+3. RF03 — Registro de adoções:
+
+RF03.1: Registrar adoção (selecionar usuário + animal + data).
+
+RF03.2: Gerar recibo/registro simples de adoção.
+
+
+4. RF04 — Consulta pública:
+
+RF04.1: Exibir lista pública de animais disponíveis (filtro por espécie/idade/sexo).
+
+RF04.2: Página de detalhe do animal (com foto e descrição).
+
+
+5. RF05 — Administração:
+
+RF05.1: Painel do admin para gerenciar animais, usuários e adoções.
+
+RF05.2: Visualizar relatórios simples (nº adoções por período, por espécie).
+
+
+Requisitos não-funcionais (RNF)
+
+RNF01: Autenticação para area administrativa (usuário/senha.
+
+RNF02: Fotos armazenadas de forma segura (filesystem organizado ou cloud).
+
+RNF03: Performance: listagem com paginação.
+
+RNF04: Backup periódico do banco de dados.
+
+RNF05: Acessibilidade básica e responsividade
+
+RNF06: Privacidade: não expor dados sensíveis do adotante publicamente (apenas e-mail/telefone a admins).

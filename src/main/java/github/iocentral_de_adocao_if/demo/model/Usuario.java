@@ -25,13 +25,13 @@ public class Usuario {
     private String email;
     private String senha;
     private String telefone;
-    private String VinculoIFPB;  //Ex:aluno, Aluno, Servidor, Visitante, Professor
+    private String vinculoIFPB;  //Ex:aluno, Aluno, Servidor, Visitante, Professor
 
     public Usuario(String nome, String email, String senha, String telefone, String vinculoIFPB) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.telefone = telefone;
-        VinculoIFPB = vinculoIFPB;
+        this.vinculoIFPB = vinculoIFPB;
     }
 }
