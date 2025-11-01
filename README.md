@@ -18,8 +18,6 @@ Spring Data JPA
 
 PostgreSQL 
 
- React
-
 Spring Security
 
 
