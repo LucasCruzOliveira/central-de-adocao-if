@@ -1,0 +1,7 @@
+package github.iocentral_de_adocao_if.demo.dto;
+
+public record AdminRequestDTO(
+        String nome,
+        String email,
+        String senha
+) {}
