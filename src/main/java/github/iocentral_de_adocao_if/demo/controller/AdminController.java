@@ -1,7 +1,7 @@
 package github.iocentral_de_adocao_if.demo.controller;
 
-import github.iocentral_de_adocao_if.demo.dto.AdminRequestDTO;
-import github.iocentral_de_adocao_if.demo.dto.AdminResponseDTO;
+import github.iocentral_de_adocao_if.demo.dto.request.AdminRequestDTO;
+import github.iocentral_de_adocao_if.demo.dto.response.AdminResponseDTO;
 import github.iocentral_de_adocao_if.demo.model.Admin;
 import github.iocentral_de_adocao_if.demo.service.AdminService;
 import org.springframework.http.ResponseEntity;
