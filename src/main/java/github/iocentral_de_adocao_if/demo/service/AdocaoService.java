@@ -3,6 +3,8 @@ package github.iocentral_de_adocao_if.demo.service;
 import github.iocentral_de_adocao_if.demo.dto.request.AdocaoRequestDTO;
 import github.iocentral_de_adocao_if.demo.model.Adocao;
 import github.iocentral_de_adocao_if.demo.repository.AdocaoRepository;
+import github.iocentral_de_adocao_if.demo.repository.AnimalRepository;
+import github.iocentral_de_adocao_if.demo.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

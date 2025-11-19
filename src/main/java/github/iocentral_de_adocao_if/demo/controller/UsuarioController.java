@@ -38,13 +38,13 @@ public class UsuarioController {
         );
    }
 
-   @PostMapping
-    public ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody UsuarioRequestDTO dto) {
-        Usuario novo = new Usuario(dto.nome(), dto.email(), dto.senha());
-        Usuario salvo = service.salvar(novo);
-
-        return ResponseEntity.ok(
-                new UsuarioResponseDTO(salvo.getId(), salvo.getNome(), salvo.getEmail())
-        );
-   }
+//   @PostMapping
+//    public ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody UsuarioRequestDTO dto) {
+//        Usuario novo = new Usuario(dto.id(), dto.nome(), dto.email());
+//        Usuario salvo = service.salvar(novo);
+//
+//        return ResponseEntity.ok(
+//                new UsuarioResponseDTO(salvo.getId(), salvo.getNome(), salvo.getEmail())
+//        );
+//   }
 }
