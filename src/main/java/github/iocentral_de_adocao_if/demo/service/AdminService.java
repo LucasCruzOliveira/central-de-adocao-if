@@ -31,11 +31,18 @@ public class AdminService {
 
     @Transactional
     public Admin salvar(Admin admin) {
+
+        // só pode existir 1 admin
+        if (repository.count() > 0) {
+            throw new RuntimeException("Já existe um administrador no sistema.");
+        }
+
+        // email duplicado
         if (repository.existsByEmail(admin.getEmail())) {
             throw new RuntimeException("Email já está em uso!");
         }
 
-        //CRIPTOGRAFAÇÃO DA SENHA
+        // criptografar senha
         admin.setSenha(encoder.encode(admin.getSenha()));
 
         return repository.save(admin);
@@ -48,7 +55,6 @@ public class AdminService {
         admin.setNome(dadosAtualizados.getNome());
         admin.setEmail(dadosAtualizados.getEmail());
 
-        // Só atualiza a senha se veio algo
         if (dadosAtualizados.getSenha() != null && !dadosAtualizados.getSenha().isBlank()) {
             admin.setSenha(encoder.encode(dadosAtualizados.getSenha()));
         }
