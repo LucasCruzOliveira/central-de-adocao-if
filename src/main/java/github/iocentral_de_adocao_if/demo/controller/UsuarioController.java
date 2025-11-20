@@ -38,13 +38,30 @@ public class UsuarioController {
         );
    }
 
-//   @PostMapping
-//    public ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody UsuarioRequestDTO dto) {
-//        Usuario novo = new Usuario(dto.id(), dto.nome(), dto.email());
-//        Usuario salvo = service.salvar(novo);
-//
-//        return ResponseEntity.ok(
-//                new UsuarioResponseDTO(salvo.getId(), salvo.getNome(), salvo.getEmail())
-//        );
-//   }
+   @PostMapping
+    public ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody UsuarioRequestDTO dto) {
+        Usuario novo = new Usuario(dto.nome(), dto.email(), dto.senha());
+        Usuario salvo = service.salvar(novo);
+
+       return ResponseEntity.ok(
+                new UsuarioResponseDTO(salvo.getId(), salvo.getNome(), salvo.getEmail())
+        );
+   }
+
+   @PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> atualizar(
+            @PathVariable UUID id,
+            @RequestBody UsuarioRequestDTO dto) {
+        Usuario usuarioAtualizado = new Usuario(dto.nome(), dto.email(), dto.senha());
+        Usuario atualizado = service.atualizar(id, usuarioAtualizado);
+
+        return ResponseEntity.ok(new UsuarioResponseDTO(atualizado.getId(), atualizado.getNome(), atualizado.getEmail())
+        );
+   }
+
+   @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
+   }
 }
