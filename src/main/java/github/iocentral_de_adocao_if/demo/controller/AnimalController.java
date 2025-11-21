@@ -60,7 +60,7 @@ public class AnimalController {
         );
     }
 
-    @DeleteMapping("/deletar/{id}")
+    @PostMapping("/deletar/{id}")
     public ResponseEntity<AnimalResponseDTO> remover(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
