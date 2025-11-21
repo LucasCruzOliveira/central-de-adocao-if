@@ -28,14 +28,37 @@ public class Animal {
     private String fotoUrl; //caminho da imagem
     private boolean adotado = false; //verificação se já foi adotado
 
-    public Animal(boolean adotado, String fotoUrl, String descricao, String sexo, int idade, String raca, String especie, String nome) {
-        this.adotado = adotado;
-        this.fotoUrl = fotoUrl;
-        this.descricao = descricao;
-        this.sexo = sexo;
-        this.idade = idade;
-        this.raca = raca;
-        this.especie = especie;
+    public Animal(UUID id, String nome, String especie, String raca, int idade, String sexo, String descricao, String fotoUrl, boolean adotado) {
+        this.id = id;
         this.nome = nome;
+        this.especie = especie;
+        this.raca = raca;
+        this.idade = idade;
+        this.sexo = sexo;
+        this.descricao = descricao;
+        this.fotoUrl = fotoUrl;
+        this.adotado = adotado;
+    }
+
+    public Animal(String nome, String especie, String raca, int idade, String sexo, String descricao, String fotoUrl, boolean adotado) {
+        this.nome = nome;
+        this.especie = especie;
+        this.raca = raca;
+        this.idade = idade;
+        this.sexo = sexo;
+        this.descricao = descricao;
+        this.fotoUrl = fotoUrl;
+        this.adotado = adotado;
+    }
+
+    public Animal(String nome, String especie, String raca, int idade, String sexo, String descricao, String s) {
+        this.nome = nome;
+        this.especie = especie;
+        this.raca = raca;
+        this.idade = idade;
+        this.sexo = sexo;
+        this.descricao = descricao;
+        this.fotoUrl = fotoUrl;
     }
 }
+

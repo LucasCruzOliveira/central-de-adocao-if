@@ -2,11 +2,13 @@ package github.iocentral_de_adocao_if.demo.service;
 
 import github.iocentral_de_adocao_if.demo.model.Animal;
 import github.iocentral_de_adocao_if.demo.repository.AnimalRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class AnimalService {
 
     private final AnimalRepository repository;
