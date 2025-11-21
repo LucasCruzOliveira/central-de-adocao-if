@@ -20,7 +20,7 @@ public class AnimalController {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<List<AnimalResponseDTO>> listar() {
         List<AnimalResponseDTO> lista = service.listarTodos()
                 .stream()
@@ -30,7 +30,7 @@ public class AnimalController {
         return ResponseEntity.ok(lista);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/buscar/{id}")
     public ResponseEntity<AnimalResponseDTO> buscar(@PathVariable UUID id) {
         Animal animal = service.buscarPorId(id);
         return ResponseEntity.ok(
@@ -38,7 +38,7 @@ public class AnimalController {
         );
     }
 
-    @PostMapping
+    @PostMapping("/salvar")
     public ResponseEntity<AnimalResponseDTO> salvar(@RequestBody AnimalRequestDTO dto) {
         Animal novo = new Animal(dto.nome(), dto.especie(), dto.raca(), dto.idade(), dto.sexo(), dto.descricao(), dto.fotoUrl());
         Animal salvo = service.salvar(novo);
@@ -47,7 +47,7 @@ public class AnimalController {
         );
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/atualizar/{id}")
     public ResponseEntity<AnimalResponseDTO> atualizar(
             @PathVariable UUID id,
             @RequestBody AnimalRequestDTO dto
@@ -60,7 +60,7 @@ public class AnimalController {
         );
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<AnimalResponseDTO> remover(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();

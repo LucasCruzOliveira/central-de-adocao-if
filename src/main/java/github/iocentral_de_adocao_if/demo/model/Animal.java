@@ -51,7 +51,7 @@ public class Animal {
         this.adotado = adotado;
     }
 
-    public Animal(String nome, String especie, String raca, int idade, String sexo, String descricao, String s) {
+    public Animal(String nome, String especie, String raca, int idade, String sexo, String descricao, String fotoUrl) {
         this.nome = nome;
         this.especie = especie;
         this.raca = raca;

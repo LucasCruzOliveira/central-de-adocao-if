@@ -20,46 +20,46 @@ public class UsuarioController {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<List<UsuarioResponseDTO>> listar() {
         List<UsuarioResponseDTO> lista = service.listarTodos()
                 .stream()
-                .map(u -> new UsuarioResponseDTO(u.getId(), u.getNome(), u.getEmail()))
+                .map(u -> new UsuarioResponseDTO(u.getId(), u.getNome(), u.getEmail(), u.getTelefone(), u.getVinculoIFPB()))
                 .toList();
 
         return ResponseEntity.ok(lista);
     }
 
-   @GetMapping("/{id}")
+   @GetMapping("/buscar/{id}")
     public ResponseEntity<UsuarioResponseDTO> buscar(@PathVariable UUID id) {
         Usuario usuario = service.buscarPorId(id);
         return ResponseEntity.ok(
-                new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail())
+                new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),usuario.getTelefone(),usuario.getVinculoIFPB())
         );
    }
 
-   @PostMapping
+   @PostMapping("/salvar")
     public ResponseEntity<UsuarioResponseDTO> salvar(@RequestBody UsuarioRequestDTO dto) {
-        Usuario novo = new Usuario(dto.nome(), dto.email(), dto.senha());
+        Usuario novo = new Usuario(dto.nome(), dto.email(), dto.senha(), dto.telefone(), dto.vinculoIFPB());
         Usuario salvo = service.salvar(novo);
 
        return ResponseEntity.ok(
-                new UsuarioResponseDTO(salvo.getId(), salvo.getNome(), salvo.getEmail())
+                new UsuarioResponseDTO(salvo.getId(), salvo.getNome(), salvo.getEmail(), salvo.getTelefone(), salvo.getVinculoIFPB())
         );
    }
 
-   @PutMapping("/{id}")
+   @PutMapping("/atualizar/{id}")
     public ResponseEntity<UsuarioResponseDTO> atualizar(
             @PathVariable UUID id,
             @RequestBody UsuarioRequestDTO dto) {
-        Usuario usuarioAtualizado = new Usuario(dto.nome(), dto.email(), dto.senha());
+        Usuario usuarioAtualizado = new Usuario(dto.nome(), dto.email(), dto.senha(), dto.telefone(), dto.vinculoIFPB());
         Usuario atualizado = service.atualizar(id, usuarioAtualizado);
 
-        return ResponseEntity.ok(new UsuarioResponseDTO(atualizado.getId(), atualizado.getNome(), atualizado.getEmail())
+        return ResponseEntity.ok(new UsuarioResponseDTO(atualizado.getId(), atualizado.getNome(), atualizado.getEmail(), atualizado.getTelefone(), atualizado.getVinculoIFPB())
         );
    }
 
-   @DeleteMapping("/{id}")
+   @PostMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
