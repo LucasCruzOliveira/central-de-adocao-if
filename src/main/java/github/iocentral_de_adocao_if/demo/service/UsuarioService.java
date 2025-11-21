@@ -2,6 +2,7 @@ package github.iocentral_de_adocao_if.demo.service;
 
 import github.iocentral_de_adocao_if.demo.model.Usuario;
 import github.iocentral_de_adocao_if.demo.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +13,11 @@ import java.util.UUID;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
+    private final PasswordEncoder encoder;
 
-    public UsuarioService(UsuarioRepository repository) {
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder encoder) {
         this.repository = repository;
+        this.encoder = encoder;
     }
 
     public List<Usuario> listarTodos() {return repository.findAll();}
@@ -29,6 +32,9 @@ public class UsuarioService {
         if(repository.existsByEmail(usuario.getEmail())) {
             throw new RuntimeException("Email já está em uso!");
         }
+
+        usuario.setSenha(encoder.encode(usuario.getSenha()));
+
         return repository.save(usuario);
     }
 
@@ -38,7 +44,10 @@ public class UsuarioService {
 
         usuario.setNome(dadosAtualizados.getNome());
         usuario.setEmail(dadosAtualizados.getEmail());
-        usuario.setSenha(dadosAtualizados.getSenha());
+
+        if (dadosAtualizados.getSenha() != null && !dadosAtualizados.getSenha().isBlank()) {
+            usuario.setSenha(encoder.encode(dadosAtualizados.getSenha()));
+        }
 
         return repository.save(usuario);
     }
