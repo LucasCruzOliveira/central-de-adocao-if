@@ -20,7 +20,11 @@ PostgreSQL
 
 Spring Security
 
+---
 
+📝 PDF contendo Diagramas de Caso de Uso, Modelo logico do banco de dados e Requisitos Funcionais e não funcionais
+
+(https://github.com/LucasCruzOliveira/central-de-adocao-if/blob/main/src/doc/Diagramas%20de%20caso%20de%20uso%2C%20Modelo%20Logico%20e%20Requisitos.pdf)
 
 ---
 
