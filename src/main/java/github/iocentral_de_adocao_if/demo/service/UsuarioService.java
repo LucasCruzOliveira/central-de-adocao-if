@@ -1,6 +1,8 @@
 package github.iocentral_de_adocao_if.demo.service;
 
+import github.iocentral_de_adocao_if.demo.model.Role;
 import github.iocentral_de_adocao_if.demo.model.Usuario;
+import github.iocentral_de_adocao_if.demo.repository.RoleRepository;
 import github.iocentral_de_adocao_if.demo.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,12 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
     private final PasswordEncoder encoder;
+    private final RoleRepository roleRepository;
 
-    public UsuarioService(UsuarioRepository repository, PasswordEncoder encoder) {
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder encoder, RoleRepository roleRepository) {
         this.repository = repository;
         this.encoder = encoder;
+        this.roleRepository = roleRepository;
     }
 
     public List<Usuario> listarTodos() {return repository.findAll();}
@@ -34,6 +38,35 @@ public class UsuarioService {
         }
 
         usuario.setSenha(encoder.encode(usuario.getSenha()));
+
+        switch (usuario.getVinculoIFPB().toUpperCase()){
+            case "ALUNO":
+                Role aluno = roleRepository.findById(1)
+                        .orElseThrow(() -> new RuntimeException("Role não encontrada"));
+
+                usuario.getRoles().add(aluno);
+                break;
+
+            case "PROFESSOR":
+                Role professor = roleRepository.findById(2)
+                        .orElseThrow(() -> new RuntimeException("Role não encontrada"));
+
+                usuario.getRoles().add(professor);
+                break;
+
+            case "FUNCIONARIO":
+                Role funcionario = roleRepository.findById(3)
+                        .orElseThrow(() -> new RuntimeException("Role não encontrada"));
+
+                usuario.getRoles().add(funcionario);
+                break;
+
+            case "VISITANTE":
+                Role visitante = roleRepository.findById(4)
+                        .orElseThrow(() -> new RuntimeException("Role não encontrada"));
+
+                usuario.getRoles().add(visitante);
+        }
 
         return repository.save(usuario);
     }

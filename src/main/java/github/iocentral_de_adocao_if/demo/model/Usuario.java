@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -15,6 +17,7 @@ import java.util.UUID;
 @Setter
 @Data
 @NoArgsConstructor
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
@@ -22,6 +25,15 @@ public class Usuario {
     private UUID id;
 
     private String nome;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usuario_roles",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
     private String email;
     private String senha;
     private String telefone;
