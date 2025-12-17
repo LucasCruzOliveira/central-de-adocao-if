@@ -24,29 +24,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        boolean nenhumAdminExiste = adminRepository.count() == 0;
-
         http
+                // DESABILITA CSRF (necessário para fetch)
                 .csrf(csrf -> csrf.disable())
+
+                // AUTORIZA ROTAS
                 .authorizeHttpRequests(auth -> auth
 
-                        // rota de login liberada
+                        // login sempre liberado
                         .requestMatchers("/auth/login").permitAll()
 
-                        // criação de admin só se ainda NÃO existir nenhum
+                        // criar admin só se ainda não existir nenhum
                         .requestMatchers(HttpMethod.POST, "/admins")
-                        .access((authn, context) ->
-                                new AuthorizationDecision(nenhumAdminExiste)
+                        .access((authentication, context) ->
+                                new AuthorizationDecision(adminRepository.count() == 0)
                         )
 
-                        // qualquer outra rota /admins/** exige login
+                        // qualquer rota /admins/** exige login
                         .requestMatchers("/admins/**").authenticated()
 
-                        // restante pode liberar
+                        // resto liberado
                         .anyRequest().permitAll()
                 )
-                .httpBasic(httpBasic -> {})
-                .formLogin(form -> form.disable());
+
+                // NÃO usar login padrão
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable());
 
         return http.build();
     }
@@ -57,8 +60,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration conf)
-            throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration conf
+    ) throws Exception {
         return conf.getAuthenticationManager();
     }
 }

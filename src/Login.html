@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Teste Login</title>
+</head>
+<body>
+
+<input id="email" placeholder="Email">
+<input id="senha" type="password" placeholder="Senha">
+<button onclick="login()">Login</button>
+
+<script>
+    function login() {
+        const email = document.getElementById("email").value.trim()
+        const senha = document.getElementById("senha").value.trim()
+
+        fetch("http://localhost:8080/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, senha })
+        })
+            .then(res => {
+                console.log("STATUS:", res.status)
+                if (!res.ok) throw new Error("Login inválido")
+                return res.json()
+            })
+            .then(data => alert("Login OK: " + data.nome))
+            .catch(err => {
+                console.error(err)
+                alert("Email ou senha incorretos")
+            })
+    }
+</script>
+
+
+</body>
+</html>
