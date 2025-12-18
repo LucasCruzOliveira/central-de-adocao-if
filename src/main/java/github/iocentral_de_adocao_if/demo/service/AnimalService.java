@@ -1,10 +1,16 @@
 package github.iocentral_de_adocao_if.demo.service;
 
+import github.iocentral_de_adocao_if.demo.dto.request.AnimalRequestDTO;
 import github.iocentral_de_adocao_if.demo.model.Animal;
 import github.iocentral_de_adocao_if.demo.repository.AnimalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,29 +33,33 @@ public class AnimalService {
     }
 
     @Transactional
-    public Animal salvar(Animal animal) {
-        return repository.save(animal);
-    }
+    public Animal salvar(AnimalRequestDTO dto, MultipartFile foto) {
+        try {
+            String nomeArquivo = UUID.randomUUID() + "_" + foto.getOriginalFilename();
+            Path caminho = Paths.get("uploads/" + nomeArquivo);
 
-    @Transactional
-    public Animal atualizar(UUID id, Animal dadosAtualizados) {
-        Animal animal = buscarPorId(id);
+            Files.createDirectories(caminho.getParent());
+            Files.write(caminho, foto.getBytes());
 
-        animal.setNome(dadosAtualizados.getNome());
-        animal.setEspecie(dadosAtualizados.getEspecie());
-        animal.setRaca(dadosAtualizados.getRaca());
-        animal.setSexo(dadosAtualizados.getSexo());
-        animal.setIdade(dadosAtualizados.getIdade());
-        animal.setFotoUrl(dadosAtualizados.getFotoUrl());
-        animal.setDescricao(dadosAtualizados.getDescricao());
+            Animal animal = new Animal(
+                    dto.nome(),
+                    dto.especie(),
+                    dto.raca(),
+                    dto.idade(),
+                    dto.sexo(),
+                    dto.descricao(),
+                    "/uploads/" + nomeArquivo
+            );
 
-        return repository.save(animal);
+            return repository.save(animal);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao salvar imagem", e);
+        }
     }
 
     @Transactional
     public void deletar(UUID id) {
-        Animal animal = buscarPorId(id);
-        repository.delete(animal);
+        repository.delete(buscarPorId(id));
     }
-
 }

@@ -8,8 +8,8 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Animal {
 
     @Id
@@ -22,11 +22,11 @@ public class Animal {
     private int idade;
     private String sexo;
 
-    @Column(length = 100)
+    @Column(length = 255)
     private String descricao;
 
-    private String fotoUrl; //caminho da imagem
-    private boolean adotado = false; //verificação se já foi adotado
+    private String fotoUrl;
+    private boolean adotado = false;
 
     public Animal(String nome, String especie, String raca, int idade, String sexo, String descricao, String fotoUrl) {
         this.nome = nome;

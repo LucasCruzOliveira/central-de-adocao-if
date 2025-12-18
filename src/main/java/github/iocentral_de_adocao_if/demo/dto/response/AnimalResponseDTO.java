@@ -12,5 +12,4 @@ public record AnimalResponseDTO(
         String descricao,
         String fotoUrl,
         boolean adotado
-) {
-}
+) {}

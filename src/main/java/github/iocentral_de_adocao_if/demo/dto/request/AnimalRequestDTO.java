@@ -6,7 +6,6 @@ public record AnimalRequestDTO(
         String raca,
         int idade,
         String sexo,
-        String descricao,
-        String fotoUrl
-) {
-}
+        String descricao
+) {}
+
