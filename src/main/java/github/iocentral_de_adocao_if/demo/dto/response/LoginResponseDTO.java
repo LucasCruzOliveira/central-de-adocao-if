@@ -5,5 +5,6 @@ import java.util.UUID;
 public record LoginResponseDTO(
         UUID id,
         String nome,
-        String email
+        String email,
+         String tipo
 ) {}
