@@ -56,6 +56,17 @@ public class AnimalController {
                 a.isAdotado()
         );
     }
+    @PutMapping("/atualizar/{id}")
+    public ResponseEntity<Void> atualizar(
+            @PathVariable UUID id,
+            @RequestPart("dados") AnimalRequestDTO dto,
+            @RequestPart(value = "foto", required = false) MultipartFile foto
+    ) {
+        service.atualizar(id, dto, foto);
+        return ResponseEntity.noContent().build();
+    }
+
+
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);

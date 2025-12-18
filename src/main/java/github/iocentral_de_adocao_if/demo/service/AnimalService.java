@@ -59,6 +59,37 @@ public class AnimalService {
     }
 
     @Transactional
+    public Animal atualizar(UUID id, AnimalRequestDTO dto, MultipartFile foto) {
+
+        Animal animal = buscarPorId(id);
+
+        animal.setNome(dto.nome());
+        animal.setEspecie(dto.especie());
+        animal.setRaca(dto.raca());
+        animal.setIdade(dto.idade());
+        animal.setSexo(dto.sexo());
+        animal.setDescricao(dto.descricao());
+
+        if (foto != null && !foto.isEmpty()) {
+            try {
+                String nomeArquivo = UUID.randomUUID() + "_" + foto.getOriginalFilename();
+                Path caminho = Paths.get("uploads/" + nomeArquivo);
+
+                Files.createDirectories(caminho.getParent());
+                Files.write(caminho, foto.getBytes());
+
+                animal.setFotoUrl("/uploads/" + nomeArquivo);
+
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao atualizar imagem", e);
+            }
+        }
+
+        return repository.save(animal);
+    }
+
+
+    @Transactional
     public void deletar(UUID id) {
         repository.delete(buscarPorId(id));
     }
