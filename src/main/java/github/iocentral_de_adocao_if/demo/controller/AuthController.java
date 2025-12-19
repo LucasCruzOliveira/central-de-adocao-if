@@ -32,7 +32,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO dto) {
 
-        // 🔐 LOGIN ADMIN
+        // LOGIN ADMIN
         var adminOpt = adminRepository.findByEmail(dto.email());
         if (adminOpt.isPresent()) {
             Admin admin = adminOpt.get();
@@ -51,7 +51,7 @@ public class AuthController {
             );
         }
 
-        // 👤 LOGIN USUÁRIO
+        // LOGIN USUÁRIO
         var userOpt = usuarioRepository.findByEmail(dto.email());
         if (userOpt.isPresent()) {
             Usuario usuario = userOpt.get();

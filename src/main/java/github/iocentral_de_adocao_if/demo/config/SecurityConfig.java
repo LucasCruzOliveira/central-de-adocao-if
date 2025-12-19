@@ -25,10 +25,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                // DESABILITA CSRF (necessário para fetch)
                 .csrf(csrf -> csrf.disable())
 
-                // AUTORIZA ROTAS
+
                 .authorizeHttpRequests(auth -> auth
 
                         // login sempre liberado
@@ -47,7 +46,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
 
-                // NÃO usar login padrão
+
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());
 
