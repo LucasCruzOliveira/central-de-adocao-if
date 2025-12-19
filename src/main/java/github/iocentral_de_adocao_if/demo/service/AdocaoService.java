@@ -46,6 +46,14 @@ public class AdocaoService {
         var animal = animalRepository.findById(dto.animalId())
                 .orElseThrow(() -> new RuntimeException("Animal não encontrado"));
 
+        if (animal.isAdotado()) {
+            throw new RuntimeException("Animal já foi adotado");
+        }
+
+        //  marca o animal como adotado
+        animal.setAdotado(true);
+        animalRepository.save(animal);
+
         Adocao adocao = new Adocao();
         adocao.setUsuario(usuario);
         adocao.setAnimal(animal);
@@ -53,6 +61,7 @@ public class AdocaoService {
 
         return repository.save(adocao);
     }
+
 
     @Transactional
     public void deletar(UUID id) {

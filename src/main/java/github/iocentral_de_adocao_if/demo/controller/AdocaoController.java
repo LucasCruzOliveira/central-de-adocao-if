@@ -1,6 +1,7 @@
 package github.iocentral_de_adocao_if.demo.controller;
 
 import github.iocentral_de_adocao_if.demo.dto.request.AdocaoRequestDTO;
+import github.iocentral_de_adocao_if.demo.dto.response.AdocaoAdminResponseDTO;
 import github.iocentral_de_adocao_if.demo.dto.response.AdocaoResponseDTO;
 import github.iocentral_de_adocao_if.demo.service.AdocaoService;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +20,27 @@ public class AdocaoController {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<List<AdocaoResponseDTO>> listar() {
-        var lista = service.listarTodas()
-                .stream()
-                .map(a -> new AdocaoResponseDTO(
+    @GetMapping("/admin")
+    public ResponseEntity<List<AdocaoAdminResponseDTO>> listarAdmin() {
+        var lista = service.listarTodas().stream().map(a ->
+                new AdocaoAdminResponseDTO(
                         a.getId(),
-                        a.getUsuario().getId(),
+                        a.getDataAdocao(),
+
                         a.getAnimal().getId(),
-                        a.getDataAdocao()
-                ))
-                .toList();
+                        a.getAnimal().getNome(),
+                        a.getAnimal().getFotoUrl(),
+
+                        a.getUsuario().getNome(),
+                        a.getUsuario().getEmail(),
+                        a.getUsuario().getTelefone(),
+                        a.getUsuario().getVinculoIFPB()
+                )
+        ).toList();
 
         return ResponseEntity.ok(lista);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<AdocaoResponseDTO> buscar(@PathVariable UUID id) {
