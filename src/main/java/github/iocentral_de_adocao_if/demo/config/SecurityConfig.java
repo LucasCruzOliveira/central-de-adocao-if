@@ -1,17 +1,19 @@
 package github.iocentral_de_adocao_if.demo.config;
 
 import github.iocentral_de_adocao_if.demo.repository.AdminRepository;
+import github.iocentral_de_adocao_if.demo.service.security.JwtFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.*;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.authorization.AuthorizationDecision;
 
 @Configuration
@@ -20,35 +22,38 @@ import org.springframework.security.authorization.AuthorizationDecision;
 public class SecurityConfig {
 
     private final AdminRepository adminRepository;
+    private final JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-                .csrf(csrf -> csrf.disable())
+        http.csrf(csrf -> csrf.disable());
 
+        http.sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
 
-                .authorizeHttpRequests(auth -> auth
+        http.authorizeHttpRequests(auth -> auth
 
-                        // login sempre liberado
-                        .requestMatchers("/auth/login").permitAll()
+                .requestMatchers("/auth/login").permitAll()
 
-                        // criar admin só se ainda não existir nenhum
-                        .requestMatchers(HttpMethod.POST, "/admins")
-                        .access((authentication, context) ->
-                                new AuthorizationDecision(adminRepository.count() == 0)
-                        )
-
-                        // qualquer rota /admins/** exige login
-                        .requestMatchers("/admins/**").authenticated()
-
-                        // resto liberado
-                        .anyRequest().permitAll()
+                .requestMatchers(HttpMethod.POST, "/admins")
+                .access((authentication, context) ->
+                        new AuthorizationDecision(adminRepository.count() == 0)
                 )
 
+                .requestMatchers("/admins/**").authenticated()
 
-                .formLogin(form -> form.disable())
-                .httpBasic(basic -> basic.disable());
+                .anyRequest().permitAll()
+        );
+
+        http.formLogin(form -> form.disable());
+        http.httpBasic(basic -> basic.disable());
+
+        http.addFilterBefore(
+                jwtFilter,
+                UsernamePasswordAuthenticationFilter.class
+        );
 
         return http.build();
     }
