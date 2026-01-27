@@ -9,6 +9,8 @@ import github.iocentral_de_adocao_if.demo.repository.UsuarioRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import github.iocentral_de_adocao_if.demo.service.security.JwtService;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -18,21 +20,24 @@ public class AuthController {
     private final AdminRepository adminRepository;
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder encoder;
+    private final JwtService jwtService;
+
 
     public AuthController(
             AdminRepository adminRepository,
             UsuarioRepository usuarioRepository,
-            PasswordEncoder encoder
+            PasswordEncoder encoder,
+             JwtService jwtService
     ) {
         this.adminRepository = adminRepository;
         this.usuarioRepository = usuarioRepository;
         this.encoder = encoder;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO dto) {
 
-        // LOGIN ADMIN
         var adminOpt = adminRepository.findByEmail(dto.email());
         if (adminOpt.isPresent()) {
             Admin admin = adminOpt.get();
@@ -41,35 +46,41 @@ public class AuthController {
                 throw new RuntimeException("Email ou senha inválidos");
             }
 
+            String token = jwtService.gerarToken(admin.getEmail(), "ADMIN");
+
             return ResponseEntity.ok(
                     new LoginResponseDTO(
                             admin.getId(),
                             admin.getNome(),
                             admin.getEmail(),
-                            "ADMIN"
+                            "ADMIN",
+                            token
                     )
             );
         }
 
-        // LOGIN USUÁRIO
         var userOpt = usuarioRepository.findByEmail(dto.email());
         if (userOpt.isPresent()) {
-            Usuario usuario = userOpt.get();
+            Usuario user = userOpt.get();
 
-            if (!encoder.matches(dto.senha(), usuario.getSenha())) {
+            if (!encoder.matches(dto.senha(), user.getSenha())) {
                 throw new RuntimeException("Email ou senha inválidos");
             }
 
+            String token = jwtService.gerarToken(user.getEmail(), "USUARIO");
+
             return ResponseEntity.ok(
                     new LoginResponseDTO(
-                            usuario.getId(),
-                            usuario.getNome(),
-                            usuario.getEmail(),
-                            "USUARIO"
+                            user.getId(),
+                            user.getNome(),
+                            user.getEmail(),
+                            "USUARIO",
+                            token
                     )
             );
         }
 
         throw new RuntimeException("Email ou senha inválidos");
     }
+
 }

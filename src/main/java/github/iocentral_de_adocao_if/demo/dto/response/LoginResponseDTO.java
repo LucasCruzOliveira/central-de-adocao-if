@@ -6,5 +6,7 @@ public record LoginResponseDTO(
         UUID id,
         String nome,
         String email,
-         String tipo
+        String tipo,
+        String token
 ) {}
+
