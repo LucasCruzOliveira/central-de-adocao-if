@@ -7,6 +7,8 @@ import github.iocentral_de_adocao_if.demo.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import github.iocentral_de_adocao_if.demo.repository.AdminRepository;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -17,11 +19,15 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final PasswordEncoder encoder;
     private final RoleRepository roleRepository;
+    private final AdminRepository adminRepository;
 
-    public UsuarioService(UsuarioRepository repository, PasswordEncoder encoder, RoleRepository roleRepository) {
+
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder encoder, RoleRepository roleRepository, AdminRepository adminRepository) {
         this.repository = repository;
         this.encoder = encoder;
         this.roleRepository = roleRepository;
+        this.adminRepository = adminRepository;
+
     }
 
     public List<Usuario> listarTodos() {return repository.findAll();}
@@ -33,9 +39,11 @@ public class UsuarioService {
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
-        if(repository.existsByEmail(usuario.getEmail())) {
-            throw new RuntimeException("Email já está em uso!");
+        if (repository.existsByEmail(usuario.getEmail())
+                || adminRepository.existsByEmail(usuario.getEmail())) {
+            throw new RuntimeException("Email já está em uso por outro usuário do sistema!");
         }
+
 
         usuario.setSenha(encoder.encode(usuario.getSenha()));
 
@@ -75,6 +83,13 @@ public class UsuarioService {
     public Usuario atualizar(UUID id, Usuario dadosAtualizados) {
         Usuario usuario = buscarPorId(id);
 
+        if (!usuario.getEmail().equals(dadosAtualizados.getEmail())) {
+            if (repository.existsByEmail(dadosAtualizados.getEmail())
+                    || adminRepository.existsByEmail(dadosAtualizados.getEmail())) {
+                throw new RuntimeException("Email já está em uso por outro usuário do sistema!");
+            }
+        }
+
         usuario.setNome(dadosAtualizados.getNome());
         usuario.setEmail(dadosAtualizados.getEmail());
 
@@ -84,6 +99,7 @@ public class UsuarioService {
 
         return repository.save(usuario);
     }
+
 
     @Transactional
     public void deletar(UUID id) {

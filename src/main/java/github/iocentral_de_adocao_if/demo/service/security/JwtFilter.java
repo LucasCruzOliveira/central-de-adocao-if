@@ -45,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String tipo = jwtService.getRole(token);
 
         UserDetails user =
-                tipo.equals("ADMIN")
+                tipo.equals("ROLE_ADMIN")
                         ? adminService.loadUserByUsername(email)
                         : usuarioService.loadUserByUsername(email);
 

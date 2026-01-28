@@ -7,6 +7,8 @@ import github.iocentral_de_adocao_if.demo.repository.RoleRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import github.iocentral_de_adocao_if.demo.repository.UsuarioRepository;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -17,11 +19,14 @@ public class AdminService {
     private final AdminRepository repository;
     private final PasswordEncoder encoder;
     private RoleRepository roleRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public AdminService(AdminRepository repository, PasswordEncoder encoder,  RoleRepository roleRepository) {
+
+    public AdminService(AdminRepository repository, PasswordEncoder encoder,  RoleRepository roleRepository, UsuarioRepository usuarioRepository) {
         this.repository = repository;
         this.encoder = encoder;
         this.roleRepository = roleRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public List<Admin> listarTodos() {
@@ -43,9 +48,11 @@ public class AdminService {
         }
 
         // email duplicado
-        if (repository.existsByEmail(admin.getEmail())) {
-            throw new RuntimeException("Email já está em uso!");
+        if (repository.existsByEmail(admin.getEmail())
+                || usuarioRepository.existsByEmail(admin.getEmail())) {
+            throw new RuntimeException("Email já está em uso por outro usuário do sistema!");
         }
+
 
         Role roleAdmin = roleRepository.findById(0)
                 .orElseGet(() -> {
@@ -70,6 +77,13 @@ public class AdminService {
     public Admin atualizar(UUID id, Admin dadosAtualizados) {
         Admin admin = buscarPorId(id);
 
+        if (!admin.getEmail().equals(dadosAtualizados.getEmail())) {
+            if (repository.existsByEmail(dadosAtualizados.getEmail())
+                    || usuarioRepository.existsByEmail(dadosAtualizados.getEmail())) {
+                throw new RuntimeException("Email já está em uso por outro usuário do sistema!");
+            }
+        }
+
         admin.setNome(dadosAtualizados.getNome());
         admin.setEmail(dadosAtualizados.getEmail());
 
@@ -79,6 +93,7 @@ public class AdminService {
 
         return repository.save(admin);
     }
+
 
     @Transactional
     public void deletar(UUID id) {
