@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import java.util.UUID;
 public class AnimalService {
 
     private final AnimalRepository repository;
+    private final String UPLOAD_DIR = "uploads/";
 
     public AnimalService(AnimalRepository repository) {
         this.repository = repository;
@@ -33,34 +35,24 @@ public class AnimalService {
     }
 
     @Transactional
-    public Animal salvar(AnimalRequestDTO dto, MultipartFile foto) {
-        try {
-            String nomeArquivo = UUID.randomUUID() + "_" + foto.getOriginalFilename();
-            Path caminho = Paths.get("uploads/" + nomeArquivo);
+    public Animal salvar(AnimalRequestDTO dto, List<MultipartFile> fotos) {
+        List<String> caminhosDasFotos = processarFotos(fotos);
 
-            Files.createDirectories(caminho.getParent());
-            Files.write(caminho, foto.getBytes());
+        Animal animal = new Animal(
+                dto.nome(),
+                dto.especie(),
+                dto.raca(),
+                dto.idade(),
+                dto.sexo(),
+                dto.descricao(),
+                caminhosDasFotos // Agora passando a lista completa!
+        );
 
-            Animal animal = new Animal(
-                    dto.nome(),
-                    dto.especie(),
-                    dto.raca(),
-                    dto.idade(),
-                    dto.sexo(),
-                    dto.descricao(),
-                    "/uploads/" + nomeArquivo
-            );
-
-            return repository.save(animal);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao salvar imagem", e);
-        }
+        return repository.save(animal);
     }
 
     @Transactional
-    public Animal atualizar(UUID id, AnimalRequestDTO dto, MultipartFile foto) {
-
+    public Animal atualizar(UUID id, AnimalRequestDTO dto, List<MultipartFile> fotos) {
         Animal animal = buscarPorId(id);
 
         animal.setNome(dto.nome());
@@ -70,24 +62,38 @@ public class AnimalService {
         animal.setSexo(dto.sexo());
         animal.setDescricao(dto.descricao());
 
-        if (foto != null && !foto.isEmpty()) {
-            try {
-                String nomeArquivo = UUID.randomUUID() + "_" + foto.getOriginalFilename();
-                Path caminho = Paths.get("uploads/" + nomeArquivo);
-
-                Files.createDirectories(caminho.getParent());
-                Files.write(caminho, foto.getBytes());
-
-                animal.setFotoUrl("/uploads/" + nomeArquivo);
-
-            } catch (IOException e) {
-                throw new RuntimeException("Erro ao atualizar imagem", e);
-            }
+        // Se o usuário enviou novas fotos, nós processamos e substituímos
+        if (fotos != null && !fotos.isEmpty() && !fotos.get(0).isEmpty()) {
+            List<String> novosCaminhos = processarFotos(fotos);
+            animal.setFotoUrls(novosCaminhos);
         }
 
         return repository.save(animal);
     }
 
+    // Método auxiliar para não repetir código de salvar arquivo
+    private List<String> processarFotos(List<MultipartFile> fotos) {
+        List<String> caminhos = new ArrayList<>();
+
+        if (fotos == null) return caminhos;
+
+        for (MultipartFile foto : fotos) {
+            if (foto.isEmpty()) continue;
+
+            try {
+                String nomeArquivo = UUID.randomUUID() + "_" + foto.getOriginalFilename();
+                Path caminho = Paths.get(UPLOAD_DIR + nomeArquivo);
+
+                Files.createDirectories(caminho.getParent());
+                Files.write(caminho, foto.getBytes());
+
+                caminhos.add("/" + UPLOAD_DIR + nomeArquivo);
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao processar imagem: " + foto.getOriginalFilename(), e);
+            }
+        }
+        return caminhos;
+    }
 
     @Transactional
     public void deletar(UUID id) {

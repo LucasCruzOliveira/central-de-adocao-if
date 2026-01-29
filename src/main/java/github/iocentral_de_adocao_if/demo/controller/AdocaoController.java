@@ -29,7 +29,7 @@ public class AdocaoController {
 
                         a.getAnimal().getId(),
                         a.getAnimal().getNome(),
-                        a.getAnimal().getFotoUrl(),
+                        a.getAnimal().getFotoUrls(),
 
                         a.getUsuario().getNome(),
                         a.getUsuario().getEmail(),

@@ -33,7 +33,8 @@ public class AnimalController {
                         a.getIdade(),
                         a.getSexo(),
                         a.getDescricao(),
-                        a.getFotoUrl(),
+                        // AQUI: Assumindo que você alterou o Model para ter getFotoUrls()
+                        a.getFotoUrls(),
                         a.isAdotado()
                 )).toList();
     }
@@ -41,9 +42,12 @@ public class AnimalController {
     @PostMapping(value = "/salvar", consumes = "multipart/form-data")
     public AnimalResponseDTO salvar(
             @RequestPart("dados") AnimalRequestDTO dto,
-            @RequestPart("foto") MultipartFile foto
+            // AQUI: Mudamos para List e nome "fotos"
+            @RequestPart("fotos") List<MultipartFile> fotos
     ) {
-        Animal a = service.salvar(dto, foto);
+        // Você precisará atualizar seu Service para aceitar List<MultipartFile>
+        Animal a = service.salvar(dto, fotos);
+
         return new AnimalResponseDTO(
                 a.getId(),
                 a.getNome(),
@@ -52,26 +56,25 @@ public class AnimalController {
                 a.getIdade(),
                 a.getSexo(),
                 a.getDescricao(),
-                a.getFotoUrl(),
+                a.getFotoUrls(), // Retorna lista
                 a.isAdotado()
         );
     }
-    @PutMapping("/atualizar/{id}")
+
+    @PutMapping(value = "/atualizar/{id}", consumes = "multipart/form-data")
     public ResponseEntity<Void> atualizar(
             @PathVariable UUID id,
             @RequestPart("dados") AnimalRequestDTO dto,
-            @RequestPart(value = "foto", required = false) MultipartFile foto
+            // AQUI: List e required false (caso não envie novas fotos)
+            @RequestPart(value = "fotos", required = false) List<MultipartFile> fotos
     ) {
-        service.atualizar(id, dto, foto);
+        service.atualizar(id, dto, fotos);
         return ResponseEntity.noContent().build();
     }
-
 
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
-
 }
-
